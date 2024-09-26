@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import nano from "nano";
 import fs from "fs";
-import path from "path";
 import { RateLimiterMemory } from "rate-limiter-flexible";
 dotenv.config();
 
@@ -66,8 +65,6 @@ async function backupDatabase(dbName) {
       stream.on("error", reject);
     });
 
-    writeStream.end();
-
     // const fullFilePath = path.join(__dirname, filePath);
     const fileStream = fs.readFileSync(filePath);
 
@@ -96,10 +93,14 @@ async function backupDatabase(dbName) {
 }
 
 async function backupAllDatabases() {
+  console.log("Fetching databases...");
   const databases = await fetchDatabases();
 
   const databasesToIgnore = process.env.IGNORE_DATABASES?.split(",") || [];
-
+  console.log(
+    "Backing up databases:",
+    databases.filter((db) => !databasesToIgnore.includes(db)).length
+  );
   for (const dbName of databases) {
     if (databasesToIgnore.includes(dbName)) {
       console.log("Skipping backup for", dbName);
@@ -132,4 +133,6 @@ async function backupAllDatabases() {
   }
 }
 
+console.log("--- Starting backup ---");
 backupAllDatabases();
+console.log("--- Backup completed ---");
