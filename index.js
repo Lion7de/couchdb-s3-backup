@@ -14,7 +14,6 @@ const config = {
     secretAccessKey: process.env.S3_SECRET,
   },
   region: process.env.S3_REGION,
-  // endpoint: process.env.S3_URL,
   sslEnabled: true,
   forcePathStyle: true,
 };

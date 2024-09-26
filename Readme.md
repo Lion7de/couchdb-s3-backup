@@ -23,7 +23,6 @@ You need to set the following variables in the environment file to configure the
 
 - S3_KEY
 - S3_SECRET
-- S3_URL
 - S3_BUCKET
 - S3_REGION
 
