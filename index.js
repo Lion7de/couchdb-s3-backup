@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import nano from "nano";
 import fs from "fs";
+import path from "path";
 import { RateLimiterMemory } from "rate-limiter-flexible";
 dotenv.config();
 
@@ -67,11 +68,19 @@ async function backupDatabase(dbName) {
 
     writeStream.end();
 
+    // const fullFilePath = path.join(__dirname, filePath);
+    const fileStream = fs.readFileSync(filePath);
+
+    // Check if file exists and is readable
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File ${filePath} does not exist.`);
+    }
+
     // Upload to S3
     const params = {
       Bucket: bucketName,
-      Key: `${fileName}`,
-      Body: filePath,
+      Key: fileName,
+      Body: Buffer.from(fileStream),
       ContentType: "application/json",
     };
 
@@ -89,7 +98,14 @@ async function backupDatabase(dbName) {
 async function backupAllDatabases() {
   const databases = await fetchDatabases();
 
+  const databasesToIgnore = process.env.IGNORE_DATABASES?.split(",") || [];
+
   for (const dbName of databases) {
+    if (databasesToIgnore.includes(dbName)) {
+      console.log("Skipping backup for", dbName);
+      continue;
+    }
+
     try {
       const rateLimiterSuccessResponse = await rateLimiter.consume(1);
 
