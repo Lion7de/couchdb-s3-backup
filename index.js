@@ -38,6 +38,7 @@ const rateLimiter = new RateLimiterMemory({
 async function fetchDatabases() {
   try {
     const databases = await couchClient.db.list();
+    console.log("Fetched databases: ", databases.length);
     return databases;
   } catch (err) {
     console.error("Error fetching databases:", err);
