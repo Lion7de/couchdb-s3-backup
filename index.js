@@ -85,7 +85,7 @@ async function backupDatabase(dbName) {
     const putCommand = new PutObjectCommand(params);
     await s3Client.send(putCommand);
 
-    await fs.unlinkSync(filePath);
+    fs.unlinkSync(filePath);
 
     console.log(`Backup successful for ${dbName}`);
   } catch (err) {
