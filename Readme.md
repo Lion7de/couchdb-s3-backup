@@ -39,6 +39,14 @@ Example usage:
 yarn start
 ```
 
+## How To Use
+
+There are multiple options to run the cronjob via Docker:
+
+- Easypanel Cronjob
+- Gitlab CI/CD (scheduled)
+- ... anywhere you can schedule a docker process
+
 ## Contributing
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request.
