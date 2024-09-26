@@ -132,8 +132,9 @@ async function backupAllDatabases() {
       await backupDatabase(dbName);
     }
   }
+
+  console.log("--- Backup completed ---");
 }
 
 console.log("--- Starting backup ---");
 backupAllDatabases();
-console.log("--- Backup completed ---");
